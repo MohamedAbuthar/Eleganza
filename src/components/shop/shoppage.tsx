@@ -64,7 +64,7 @@ export default function FeaturedCollection() {
               className="overflow-hidden bg-white hover:shadow-lg transition-shadow duration-300"
             >
               {/* Product Image */}
-              <div className="aspect-[4/3] -mx-6 -mt-6 mb-6 relative overflow-hidden group">
+              <div className="aspect-[3/3] -mx-6 -mt-6 mb-6 relative overflow-hidden group">
                 <img
                   src={product.image}
                   alt={product.title}
