@@ -4,6 +4,10 @@ import { ArrowRight } from 'lucide-react';
 import { Button } from '../ui/button';
 import EleganzaHeader from '../common/Header';
 import EleganzaFooter from '../common/footer';
+import FeaturedCollection from '../shop/shoppage';
+import ShopByCategory from '../collections/collectionspage';
+import EleganzaLanding from '../About/about';
+import NewsletterContact from '../Contact/contact';
 
 const EleganzaHero: React.FC = () => {
   return (
@@ -57,6 +61,22 @@ const EleganzaHero: React.FC = () => {
       {/* Decorative Element - Optional */}
       <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#e8dfd3]/50 to-transparent pointer-events-none"></div>
     </section>
+    <section id="shop">
+        <FeaturedCollection/>
+    </section>
+    
+    <section id='collections'>
+        <ShopByCategory/>
+    </section>
+    
+    <section id='about'>
+        <EleganzaLanding/>
+    </section>
+    
+    <section id='contact'>
+        <NewsletterContact/>
+    </section>
+    
     <EleganzaFooter/>
     </>
   );
