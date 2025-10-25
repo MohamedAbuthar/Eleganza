@@ -99,7 +99,7 @@ export default function FeaturedCollection() {
 
         {/* View All Button */}
         <div className="text-center">
-          <button className="px-8 py-3 bg-white text-gray-900 text-sm font-medium rounded-md border border-gray-300 hover:bg-gray-50 transition-colors duration-200 shadow-sm">
+          <button className="px-8 py-3 bg-white text-gray-900 text-sm font-medium rounded-md border border-gray-300 hover:bg-orange-100 transition-colors duration-200 shadow-sm">
             View All Products
           </button>
         </div>
