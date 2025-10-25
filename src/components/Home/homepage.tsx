@@ -16,7 +16,7 @@ const EleganzaHero: React.FC = () => {
   return (
     <>
     <EleganzaHeader/>
-    <section className="relative w-full min-h-screen bg-secondary/30 overflow-hidden">
+    <section className="relative w-full min-h-screen bg-secondary/30  overflow-hidden">
       {/* Background Image */}
       <div className="absolute inset-0 w-full h-full">
         <img
@@ -29,10 +29,10 @@ const EleganzaHero: React.FC = () => {
       </div>
 
       {/* Content */}
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-32">
+      <div className="relative z-10 max-w-8xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-32">
         <div className="max-w-2xl">
           {/* Heading */}
-          <h1 className="text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-serif font-bold text-gray-900 leading-tight mb-6 lg:mb-8">
+          <h1 className="text-5xl sm:text-6xl lg:text-7xl xl:text-7xl font-serif font-bold text-gray-900 leading-tight mb-6 lg:mb-8">
             Transform Your Space
           </h1>
 

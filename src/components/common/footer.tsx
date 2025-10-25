@@ -3,24 +3,24 @@ import { Facebook, Instagram, Twitter, Phone, Mail, MapPin } from 'lucide-react'
 
 const EleganzaFooter: React.FC = () => {
   const shopLinks = [
-    { name: 'Living Room', href: '#' },
-    { name: 'Bedroom', href: '#' },
-    { name: 'Dining', href: '#' },
-    { name: 'Office', href: '#' },
+    { name: 'Living Room', href: '#home' },
+    { name: 'Bedroom', href: '#home' },
+    { name: 'Dining', href: '#home' },
+    { name: 'Office', href: '#home' },
   ];
 
   const companyLinks = [
-    { name: 'About Us', href: '#' },
-    { name: 'Careers', href: '#' },
-    { name: 'Sustainability', href: '#' },
-    { name: 'Press', href: '#' },
+    { name: 'About Us', href: '#about' },
+    { name: 'Careers', href: '#home' },
+    { name: 'Sustainability', href: '#home' },
+    { name: 'Press', href: '#home' },
   ];
 
   const supportLinks = [
-    { name: 'Contact', href: '#' },
-    { name: 'FAQs', href: '#' },
-    { name: 'Shipping', href: '#' },
-    { name: 'Returns', href: '#' },
+    { name: 'Contact', href: '#contact' },
+    { name: 'FAQs', href: '#home' },
+    { name: 'Shipping', href: '#home' },
+    { name: 'Returns', href: '#home' },
   ];
 
   return (
