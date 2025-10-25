@@ -1,3 +1,4 @@
+'use client';
 import React, { useState, useEffect } from 'react';
 import { ShoppingBag, Menu, X } from 'lucide-react';
 
@@ -13,12 +14,31 @@ const EleganzaHeader: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    e.preventDefault();
+    const targetId = href.replace('#', '');
+    const element = document.getElementById(targetId);
+    
+    if (element) {
+      const headerOffset = 80; // Height of fixed header
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+    }
+    
+    setIsMenuOpen(false);
+  };
+
   const navLinks = [
-    { name: 'Home', href: '#' },
-    { name: 'Shop', href: '#' },
-    { name: 'Collections', href: '#' },
-    { name: 'About', href: '#' },
-    { name: 'Contact', href: '#' },
+    { name: 'Home', href: '#home' },
+    { name: 'Shop', href: '#shop' },
+    { name: 'Collections', href: '#collections' },
+    { name: 'About', href: '#about' },
+    { name: 'Contact', href: '#contact' },
   ];
 
   return (
@@ -46,7 +66,8 @@ const EleganzaHeader: React.FC = () => {
               <a
                 key={link.name}
                 href={link.href}
-                className={`text-base font-normal transition-colors duration-300 ${
+                onClick={(e) => handleNavClick(e, link.href)}
+                className={`text-base font-normal transition-colors duration-300 cursor-pointer ${
                   scrolled
                     ? 'text-gray-800 hover:text-gray-900'
                     : 'text-gray-800 hover:text-gray-900'
@@ -95,8 +116,8 @@ const EleganzaHeader: React.FC = () => {
               <a
                 key={link.name}
                 href={link.href}
-                className="block py-3 px-4 text-gray-800 hover:text-gray-900 hover:bg-[#d9cdb8] text-base font-normal transition-all duration-200"
-                onClick={() => setIsMenuOpen(false)}
+                onClick={(e) => handleNavClick(e, link.href)}
+                className="block py-3 px-4 text-gray-800 hover:text-gray-900 hover:bg-[#d9cdb8] text-base font-normal transition-all duration-200 cursor-pointer"
               >
                 {link.name}
               </a>
