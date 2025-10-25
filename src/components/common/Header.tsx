@@ -69,8 +69,8 @@ const EleganzaHeader: React.FC = () => {
                 onClick={(e) => handleNavClick(e, link.href)}
                 className={`text-base font-normal transition-colors duration-300 cursor-pointer ${
                   scrolled
-                    ? 'text-gray-800 hover:text-gray-900'
-                    : 'text-gray-800 hover:text-gray-900'
+                    ? 'text-gray-800 hover:text-green-900'
+                    : 'text-gray-800 hover:text-green-900'
                 }`}
               >
                 {link.name}

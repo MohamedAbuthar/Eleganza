@@ -40,21 +40,21 @@ const EleganzaFooter: React.FC = () => {
             <div className="flex items-center space-x-3">
               <a
                 href="#"
-                className="w-10 h-10 rounded-full bg-[#d4c7b5] hover:bg-[#c4b7a5] flex items-center justify-center text-gray-700 hover:text-gray-900 transition-all duration-300"
+                className="w-10 h-10 rounded-full bg-[#335B4D1A] hover:bg-green-900 flex items-center justify-center text-gray-700 hover:text-gray-900 transition-all duration-300"
                 aria-label="Facebook"
               >
                 <Facebook className="w-5 h-5" />
               </a>
               <a
                 href="#"
-                className="w-10 h-10 rounded-full bg-[#d4c7b5] hover:bg-[#c4b7a5] flex items-center justify-center text-gray-700 hover:text-gray-900 transition-all duration-300"
+                className="w-10 h-10 rounded-full bg-[#335B4D1A] hover:bg-green-900 flex items-center justify-center text-gray-700 hover:text-gray-900 transition-all duration-300"
                 aria-label="Instagram"
               >
                 <Instagram className="w-5 h-5 " />
               </a>
               <a
                 href="#"
-                className="w-10 h-10 rounded-full bg-[#d4c7b5] hover:bg-[#c4b7a5] flex items-center justify-center text-gray-700 hover:text-gray-900 transition-all duration-300"
+                className="w-10 h-10 rounded-full bg-[#335B4D1A] hover:bg-green-900 flex items-center justify-center text-gray-700 hover:text-gray-900 transition-all duration-300"
                 aria-label="Twitter"
               >
                 <Twitter className="w-5 h-5" />
