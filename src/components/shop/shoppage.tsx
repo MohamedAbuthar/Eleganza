@@ -1,3 +1,4 @@
+import React from 'react';
 import { ShoppingBag } from 'lucide-react';
 import { Card } from '../ui/card';
 
@@ -67,11 +68,11 @@ export default function FeaturedCollection() {
               className="overflow-hidden border border-gray-200 rounded-lg shadow-sm hover:shadow-lg transition-shadow duration-300"
             >
               {/* Product Image */}
-              <div className={`${product.bgColor} aspect-[4/3] relative overflow-hidden`}>
+              <div className={`${product.bgColor} aspect-[4/3] relative overflow-hidden flex items-center justify-center`}>
                 <img
                   src={product.image}
                   alt={product.title}
-                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                  className="w-full h-full object-contain hover:scale-105 transition-transform duration-500 p-8"
                 />
               </div>
 
