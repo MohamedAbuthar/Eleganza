@@ -8,12 +8,15 @@ import FeaturedCollection from '../shop/shoppage';
 import ShopByCategory from '../collections/collectionspage';
 import EleganzaLanding from '../About/about';
 import NewsletterContact from '../Contact/contact';
+import { useRouter } from 'next/navigation';
 
 const EleganzaHero: React.FC = () => {
+    const router = useRouter();
+
   return (
     <>
     <EleganzaHeader/>
-    <section className="relative w-full min-h-screen bg-[#e8dfd3] overflow-hidden">
+    <section className="relative w-full min-h-screen bg-secondary/30 overflow-hidden">
       {/* Background Image */}
       <div className="absolute inset-0 w-full h-full">
         <img
@@ -43,6 +46,7 @@ const EleganzaHero: React.FC = () => {
             <Button 
               size="lg" 
               className="bg-[#3d5a52] hover:bg-[#2d4a42] text-white"
+              onClick={() => router.push('#shop')}
             >
               Shop Collection
               <ArrowRight className="ml-2 w-5 h-5" />
@@ -51,6 +55,7 @@ const EleganzaHero: React.FC = () => {
               size="lg" 
               variant="outline"
               className="bg-white hover:bg-gray-50"
+            onClick={() => router.push('#about')}
             >
               Learn More
             </Button>
@@ -76,7 +81,7 @@ const EleganzaHero: React.FC = () => {
     <section id='contact'>
         <NewsletterContact/>
     </section>
-    
+
     <EleganzaFooter/>
     </>
   );
