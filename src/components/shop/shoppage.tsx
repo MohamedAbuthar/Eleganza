@@ -61,7 +61,7 @@ export default function FeaturedCollection() {
           {products.map((product) => (
             <Card 
               key={product.id} 
-              className="overflow-hidden bg-white hover:shadow-lg transition-shadow duration-300"
+              className="overflow-hidden bg-white hover:shadow-2xl transition-all duration-300 cursor-pointer group"
             >
               {/* Product Image */}
               <div className="aspect-[3/3] -mx-6 -mt-6 mb-6 relative overflow-hidden group">
@@ -77,24 +77,25 @@ export default function FeaturedCollection() {
                 <p className="text-xs font-medium tracking-widest text-gray-400 mb-2 uppercase">
                   {product.category}
                 </p>
-                <h3 className="text-lg font-serif text-gray-900 mb-4">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">
                   {product.title}
                 </h3>
                 <div className="flex items-center justify-between">
-                  <span className="text-xl font-bold text-gray-900">
+                  <span className="text-xl font-bold text-green-900">
                     ${product.price.toLocaleString()}
                   </span>
                   <button 
-                    className="p-2 rounded-md hover:bg-gray-100 transition-colors duration-200"
+                    className="p-2 rounded-md  group-hover:bg-green-900 transition-colors duration-200"
                     aria-label={`Add ${product.title} to cart`}
                   >
-                    <ShoppingBag className="w-5 h-5 text-gray-600" />
+                    <ShoppingBag className="w-5 h-5 text-gray-600 group-hover:text-white transition-colors duration-200" />
                   </button>
                 </div>
               </div>
             </Card>
           ))}
         </div>
+
 
         {/* View All Button */}
         <div className="text-center">
