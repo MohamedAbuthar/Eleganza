@@ -1,6 +1,7 @@
-import React from 'react';
+
 import { ShoppingBag } from 'lucide-react';
 import { Card } from '../ui/card';
+
 
 interface Product {
   id: number;
@@ -8,7 +9,6 @@ interface Product {
   title: string;
   price: number;
   image: string;
-  bgColor: string;
 }
 
 const products: Product[] = [
@@ -17,45 +17,41 @@ const products: Product[] = [
     category: 'SEATING',
     title: 'Mid-Century Armchair',
     price: 899,
-    image: '/chair.png',
-    bgColor: 'bg-gray-50'
+    image: '/chair.png'
   },
   {
     id: 2,
     category: 'TABLES',
     title: 'Modern Dining Table',
     price: 1599,
-    image: '/table.png',
-    bgColor: 'bg-white'
+    image: '/table.png'
   },
   {
     id: 3,
     category: 'LIGHTING',
     title: 'Brass Table Lamp',
     price: 249,
-    image: '/tablelamp.png',
-    bgColor: 'bg-gray-200'
+    image: '/tablelamp.png'
   },
   {
     id: 4,
     category: 'STORAGE',
     title: 'Minimalist Bookshelf',
     price: 799,
-    image: '/cupboard.png',
-    bgColor: 'bg-gray-50'
+    image: '/cupboard.png'
   }
 ];
 
 export default function FeaturedCollection() {
   return (
-    <div className="min-h-screen bg-[#f5f5f0] py-16 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[#f5f3f0] py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="text-center mb-16">
-          <h1 className="text-5xl sm:text-6xl font-serif text-[#2d2d2d] mb-4 tracking-tight">
+        <div className="text-center mb-12">
+          <h1 className="text-4xl md:text-5xl font-serif text-gray-900 mb-3">
             Featured Collection
           </h1>
-          <p className="text-[#888888] text-lg font-light">
+          <p className="text-gray-500 text-base md:text-lg">
             Handpicked pieces that blend functionality with timeless design
           </p>
         </div>
@@ -65,42 +61,34 @@ export default function FeaturedCollection() {
           {products.map((product) => (
             <Card 
               key={product.id} 
-              className="overflow-hidden border border-gray-200 rounded-lg shadow-sm hover:shadow-lg transition-shadow duration-300"
+              className="overflow-hidden bg-white hover:shadow-lg transition-shadow duration-300"
             >
               {/* Product Image */}
-              <div className={`${product.bgColor} aspect-[4/3] relative overflow-hidden flex items-center justify-center`}>
+              <div className="aspect-[4/3] -mx-6 -mt-6 mb-6 relative overflow-hidden group">
                 <img
                   src={product.image}
                   alt={product.title}
-                  className="w-full h-full object-contain hover:scale-105 transition-transform duration-500 p-8"
+                  className="object-cover transition-transform duration-500 group-hover:scale-105"
                 />
               </div>
 
               {/* Product Info */}
-              <div className="p-6 bg-white">
-                <p className="text-xs font-semibold tracking-wider text-[#888888] mb-2">
+              <div className="p-5">
+                <p className="text-xs font-medium tracking-widest text-gray-400 mb-2 uppercase">
                   {product.category}
                 </p>
-                <h3 className="text-xl font-serif text-[#2d2d2d] mb-4 min-h-[3.5rem]">
+                <h3 className="text-lg font-serif text-gray-900 mb-4">
                   {product.title}
                 </h3>
                 <div className="flex items-center justify-between">
-                  <span className="text-2xl font-semibold text-[#2d2d2d]">
+                  <span className="text-xl font-bold text-gray-900">
                     ${product.price.toLocaleString()}
                   </span>
                   <button 
-                    className={`p-3 rounded-md transition-colors duration-200 ${
-                      product.id === 3 
-                        ? 'bg-[#3d5a4f] hover:bg-[#2d4a3f]' 
-                        : 'bg-gray-100 hover:bg-gray-200'
-                    }`}
+                    className="p-2 rounded-md hover:bg-gray-100 transition-colors duration-200"
                     aria-label={`Add ${product.title} to cart`}
                   >
-                    <ShoppingBag 
-                      className={`w-5 h-5 ${
-                        product.id === 3 ? 'text-white' : 'text-[#2d2d2d]'
-                      }`} 
-                    />
+                    <ShoppingBag className="w-5 h-5 text-gray-600" />
                   </button>
                 </div>
               </div>
@@ -110,7 +98,7 @@ export default function FeaturedCollection() {
 
         {/* View All Button */}
         <div className="text-center">
-          <button className="px-8 py-3 bg-white text-[#2d2d2d] text-base font-medium rounded-md border border-gray-300 hover:bg-gray-50 transition-colors duration-200 shadow-sm">
+          <button className="px-8 py-3 bg-white text-gray-900 text-sm font-medium rounded-md border border-gray-300 hover:bg-gray-50 transition-colors duration-200 shadow-sm">
             View All Products
           </button>
         </div>

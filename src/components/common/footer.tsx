@@ -24,7 +24,7 @@ const EleganzaFooter: React.FC = () => {
   ];
 
   return (
-    <footer className="w-full bg-[#e8dfd3] border-t border-gray-300">
+    <footer className="w-full bg-[#ebe9e1] border-t border-gray-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
         {/* Main Footer Content */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
@@ -50,7 +50,7 @@ const EleganzaFooter: React.FC = () => {
                 className="w-10 h-10 rounded-full bg-[#d4c7b5] hover:bg-[#c4b7a5] flex items-center justify-center text-gray-700 hover:text-gray-900 transition-all duration-300"
                 aria-label="Instagram"
               >
-                <Instagram className="w-5 h-5" />
+                <Instagram className="w-5 h-5 " />
               </a>
               <a
                 href="#"
