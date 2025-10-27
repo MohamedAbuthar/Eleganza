@@ -1,25 +1,15 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { Plus, Edit2, Trash2, Eye, EyeOff, Image, LogOut, Lock, Mail } from 'lucide-react';
-
-// Firebase imports - Replace with your actual Firebase config
-// import { db, auth } from '@/lib/firebase';
-// import { collection, addDoc, updateDoc, deleteDoc, doc, getDocs, query, where, orderBy } from 'firebase/firestore';
-// import { signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'firebase/auth';
-
-// Mock Firebase for demo - REMOVE THESE when you have real Firebase
-const mockAuth = {
-  currentUser: null,
-  onAuthStateChanged: (callback: any) => { callback(null); return () => {}; }
-};
-const mockDb = { collection: () => {} };
+import { collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, orderBy, query } from 'firebase/firestore';
+import { db } from '../lib/firebase';
 
 interface Product {
   id: string;
   category: string;
   title: string;
   price: number;
-  imageId: string; // Reference to localStorage image
+  image: string;
   createdAt: Date;
   isActive: boolean;
 }
@@ -44,32 +34,42 @@ export default function AdminPortal() {
   });
 
   useEffect(() => {
-    // Replace with real Firebase auth
-    // const unsubscribe = onAuthStateChanged(auth, (user) => {
-    //   setUser(user);
-    //   setLoading(false);
-    //   if (user) {
-    //     fetchProducts();
-    //   }
-    // });
-    // return () => unsubscribe();
-
-    // Mock for demo
     setTimeout(() => setLoading(false), 500);
   }, []);
+
+  // Listen to Firestore changes in real-time
+  useEffect(() => {
+    if (!user) return;
+
+    const q = query(collection(db, 'products'), orderBy('createdAt', 'desc'));
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const productsArray = snapshot.docs.map(doc => {
+        const data = doc.data();
+        // Get image from localStorage
+        const image = localStorage.getItem(`product_image_${doc.id}`) || '';
+        return {
+          id: doc.id,
+          category: data.category,
+          title: data.title,
+          price: data.price,
+          isActive: data.isActive,
+          image,
+          createdAt: data.createdAt?.toDate() || new Date()
+        };
+      });
+      setProducts(productsArray);
+    });
+
+    return () => unsubscribe();
+  }, [user]);
 
   const handleLogin = async () => {
     setLoginError('');
     setLoading(true);
 
     try {
-      // REPLACE WITH REAL FIREBASE:
-      // await signInWithEmailAndPassword(auth, email, password);
-      
-      // Mock login for demo
       if (email && password) {
         setUser({ email });
-        fetchProducts();
       } else {
         throw new Error('Please enter email and password');
       }
@@ -81,62 +81,9 @@ export default function AdminPortal() {
   };
 
   const handleLogout = async () => {
-    try {
-      // REPLACE WITH: await signOut(auth);
-      setUser(null);
-      setEmail('');
-      setPassword('');
-      setProducts([]);
-    } catch (error) {
-      console.error('Logout error:', error);
-    }
-  };
-
-  const fetchProducts = async () => {
-    try {
-      // REPLACE WITH REAL FIREBASE:
-      // const q = query(
-      //   collection(db, 'products'),
-      //   orderBy('createdAt', 'desc')
-      // );
-      // const querySnapshot = await getDocs(q);
-      // const productsData = querySnapshot.docs.map(doc => ({
-      //   id: doc.id,
-      //   ...doc.data(),
-      //   createdAt: doc.data().createdAt?.toDate() || new Date()
-      // })) as Product[];
-      // setProducts(productsData);
-
-      // Mock data from localStorage for demo
-      const stored = localStorage.getItem('firebase_products');
-      if (stored) {
-        const parsed = JSON.parse(stored);
-        setProducts(parsed.map((p: any) => ({
-          ...p,
-          createdAt: new Date(p.createdAt)
-        })));
-      }
-    } catch (error) {
-      console.error('Error fetching products:', error);
-      alert('Failed to fetch products from Firebase');
-    }
-  };
-
-  // Save image to localStorage and return imageId
-  const saveImageToLocal = (base64Image: string): string => {
-    const imageId = `img_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    localStorage.setItem(`product_image_${imageId}`, base64Image);
-    return imageId;
-  };
-
-  // Get image from localStorage by imageId
-  const getImageFromLocal = (imageId: string): string => {
-    return localStorage.getItem(`product_image_${imageId}`) || '';
-  };
-
-  // Delete image from localStorage
-  const deleteImageFromLocal = (imageId: string) => {
-    localStorage.removeItem(`product_image_${imageId}`);
+    setUser(null);
+    setEmail('');
+    setPassword('');
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -163,67 +110,31 @@ export default function AdminPortal() {
     }
 
     try {
-      let imageId: string;
+      // Firestore data (without image)
+      const firestoreData = {
+        category: formData.category.toUpperCase(),
+        title: formData.title,
+        price: parseFloat(formData.price),
+        isActive: formData.isActive,
+        createdAt: editingProduct?.createdAt || new Date()
+      };
 
       if (editingProduct) {
         // Update existing product
-        imageId = formData.image.startsWith('data:') 
-          ? saveImageToLocal(formData.image) // New image uploaded
-          : editingProduct.imageId; // Keep existing imageId
-
-        const productData = {
-          category: formData.category.toUpperCase(),
-          title: formData.title,
-          price: parseFloat(formData.price),
-          imageId: imageId,
-          isActive: formData.isActive,
-          updatedAt: new Date()
-        };
-
-        // REPLACE WITH REAL FIREBASE:
-        // await updateDoc(doc(db, 'products', editingProduct.id), productData);
-
-        // Mock update for demo
-        const stored = localStorage.getItem('firebase_products') || '[]';
-        const parsed = JSON.parse(stored);
-        const updated = parsed.map((p: any) => 
-          p.id === editingProduct.id ? { ...p, ...productData } : p
-        );
-        localStorage.setItem('firebase_products', JSON.stringify(updated));
-
-        // Delete old image if new one was uploaded
-        if (formData.image.startsWith('data:') && editingProduct.imageId !== imageId) {
-          deleteImageFromLocal(editingProduct.imageId);
-        }
-
+        const productRef = doc(db, 'products', editingProduct.id);
+        await updateDoc(productRef, firestoreData);
+        // Update image in localStorage
+        localStorage.setItem(`product_image_${editingProduct.id}`, formData.image);
         alert('Product updated successfully!');
       } else {
         // Add new product
-        imageId = saveImageToLocal(formData.image);
-
-        const productData = {
-          id: `prod_${Date.now()}`,
-          category: formData.category.toUpperCase(),
-          title: formData.title,
-          price: parseFloat(formData.price),
-          imageId: imageId,
-          isActive: formData.isActive,
-          createdAt: new Date()
-        };
-
-        // REPLACE WITH REAL FIREBASE:
-        // await addDoc(collection(db, 'products'), productData);
-
-        // Mock add for demo
-        const stored = localStorage.getItem('firebase_products') || '[]';
-        const parsed = JSON.parse(stored);
-        localStorage.setItem('firebase_products', JSON.stringify([productData, ...parsed]));
-
+        const docRef = await addDoc(collection(db, 'products'), firestoreData);
+        // Store image in localStorage with the new document ID
+        localStorage.setItem(`product_image_${docRef.id}`, formData.image);
         alert('Product added successfully!');
       }
 
       resetForm();
-      fetchProducts();
     } catch (error: any) {
       console.error('Error saving product:', error);
       alert(`Failed to save product: ${error.message}`);
@@ -231,36 +142,26 @@ export default function AdminPortal() {
   };
 
   const handleEdit = (product: Product) => {
-    const imageData = getImageFromLocal(product.imageId);
     setEditingProduct(product);
     setFormData({
       category: product.category,
       title: product.title,
       price: product.price.toString(),
-      image: imageData,
+      image: product.image,
       isActive: product.isActive
     });
-    setImagePreview(imageData);
+    setImagePreview(product.image);
     setShowForm(true);
   };
 
-  const handleDelete = async (product: Product) => {
+  const handleDelete = async (id: string) => {
     if (window.confirm('Are you sure you want to delete this product?')) {
       try {
-        // REPLACE WITH REAL FIREBASE:
-        // await deleteDoc(doc(db, 'products', product.id));
-
-        // Mock delete for demo
-        const stored = localStorage.getItem('firebase_products') || '[]';
-        const parsed = JSON.parse(stored);
-        const filtered = parsed.filter((p: any) => p.id !== product.id);
-        localStorage.setItem('firebase_products', JSON.stringify(filtered));
-
+        // Delete from Firestore
+        await deleteDoc(doc(db, 'products', id));
         // Delete image from localStorage
-        deleteImageFromLocal(product.imageId);
-        
+        localStorage.removeItem(`product_image_${id}`);
         alert('Product deleted successfully!');
-        fetchProducts();
       } catch (error: any) {
         alert(`Failed to delete: ${error.message}`);
       }
@@ -269,20 +170,8 @@ export default function AdminPortal() {
 
   const toggleActive = async (product: Product) => {
     try {
-      // REPLACE WITH REAL FIREBASE:
-      // await updateDoc(doc(db, 'products', product.id), {
-      //   isActive: !product.isActive
-      // });
-
-      // Mock toggle for demo
-      const stored = localStorage.getItem('firebase_products') || '[]';
-      const parsed = JSON.parse(stored);
-      const updated = parsed.map((p: any) => 
-        p.id === product.id ? { ...p, isActive: !p.isActive } : p
-      );
-      localStorage.setItem('firebase_products', JSON.stringify(updated));
-      
-      fetchProducts();
+      const productRef = doc(db, 'products', product.id);
+      await updateDoc(productRef, { isActive: !product.isActive });
     } catch (error: any) {
       alert(`Failed to update: ${error.message}`);
     }
@@ -370,7 +259,7 @@ export default function AdminPortal() {
 
           <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-md">
             <p className="text-xs text-blue-800">
-              <strong>Hybrid Storage:</strong> Images stored locally, product details in Firebase Firestore.
+              <strong>Connected to Firestore:</strong> Products sync in real-time across all 3 owners!
             </p>
           </div>
         </div>
@@ -443,7 +332,7 @@ export default function AdminPortal() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Product Image (Stored Locally)</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Product Image</label>
                   <input
                     type="file"
                     accept="image/*"
@@ -506,52 +395,53 @@ export default function AdminPortal() {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {products.map((product) => {
-                const imageData = getImageFromLocal(product.imageId);
-                return (
-                  <tr key={product.id}>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="w-16 h-16 rounded-lg overflow-hidden bg-gray-100">
-                        <img src={imageData} alt={product.title} className="w-full h-full object-cover" />
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm font-medium text-gray-900">{product.title}</div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">
-                        {product.category}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      ${product.price.toLocaleString()}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <button
-                        onClick={() => toggleActive(product)}
-                        className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                          product.isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                        }`}
-                      >
-                        {product.isActive ? 'Active' : 'Inactive'}
+              {products.map((product) => (
+                <tr key={product.id}>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="w-16 h-16 rounded-lg overflow-hidden bg-gray-100 flex items-center justify-center">
+                      {product.image ? (
+                        <img src={product.image} alt={product.title} className="w-full h-full object-cover" />
+                      ) : (
+                        <Image className="w-8 h-8 text-gray-400" />
+                      )}
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="text-sm font-medium text-gray-900">{product.title}</div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">
+                      {product.category}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    ${product.price.toLocaleString()}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <button
+                      onClick={() => toggleActive(product)}
+                      className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                        product.isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                      }`}
+                    >
+                      {product.isActive ? 'Active' : 'Inactive'}
+                    </button>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                    <div className="flex gap-2">
+                      <button onClick={() => handleEdit(product)} className="text-blue-600 hover:text-blue-900" title="Edit">
+                        <Edit2 className="w-5 h-5" />
                       </button>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                      <div className="flex gap-2">
-                        <button onClick={() => handleEdit(product)} className="text-blue-600 hover:text-blue-900" title="Edit">
-                          <Edit2 className="w-5 h-5" />
-                        </button>
-                        <button onClick={() => toggleActive(product)} className="text-gray-600 hover:text-gray-900" title="Toggle visibility">
-                          {product.isActive ? <Eye className="w-5 h-5" /> : <EyeOff className="w-5 h-5" />}
-                        </button>
-                        <button onClick={() => handleDelete(product)} className="text-red-600 hover:text-red-900" title="Delete">
-                          <Trash2 className="w-5 h-5" />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                );
-              })}
+                      <button onClick={() => toggleActive(product)} className="text-gray-600 hover:text-gray-900" title="Toggle visibility">
+                        {product.isActive ? <Eye className="w-5 h-5" /> : <EyeOff className="w-5 h-5" />}
+                      </button>
+                      <button onClick={() => handleDelete(product.id)} className="text-red-600 hover:text-red-900" title="Delete">
+                        <Trash2 className="w-5 h-5" />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
           
